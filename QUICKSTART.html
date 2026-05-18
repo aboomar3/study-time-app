@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الاستخدام السريع</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #6366f1;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        h2 {
+            color: #6366f1;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .step {
+            background: #f8fafc;
+            padding: 15px;
+            border-right: 4px solid #6366f1;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .step-number {
+            background: #6366f1;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            float: left;
+            margin-left: 10px;
+        }
+        
+        .step-content {
+            overflow: hidden;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 1.8rem;
+        }
+        
+        .feature-text {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .feature-desc {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .button-primary {
+            background: #6366f1;
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+        
+        .button-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .button-secondary:hover {
+            background: #cbd5e1;
+        }
+        
+        .tips {
+            background: #fef08a;
+            border-left: 4px solid #eab308;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .tips-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 10px;
+        }
+        
+        .tips-list {
+            list-style: none;
+            color: #78350f;
+        }
+        
+        .tips-list li {
+            padding: 5px 0;
+            padding-right: 20px;
+        }
+        
+        .tips-list li:before {
+            content: "✓ ";
+            color: #eab308;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 دليل الاستخدام السريع</h1>
+        <p class="subtitle">تطبيق مؤقت الدراسة والمهام</p>
+        
+        <!-- القسم الأول -->
+        <div class="section">
+            <h2>🚀 البدء السريع</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>افتح التطبيق</strong>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">انقر على ملف index.html</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>اختر نمط الدراسة</strong>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">دراسة (25 دقيقة) أو راحة (5-15 دقيقة)</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>ابدأ المؤقت</strong>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">انقر على زر "ابدأ"</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <strong>أضف مهامك</strong>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: 5px;">اكتب المهام في القسم الأيسر</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الميزات -->
+        <div class="section">
+            <h2>✨ الميزات الرئيسية</h2>
+            
+            <div class="feature">
+                <div class="feature-icon">⏱️</div>
+                <div class="feature-text">
+                    <div class="feature-title">مؤقت Pomodoro</div>
+                    <div class="feature-desc">مؤقت قابل للتخصيص للدراسة والراحة</div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📋</div>
+                <div class="feature-text">
+                    <div class="feature-title">قائمة المهام</div>
+                    <div class="feature-desc">أضف ومتابعة مهامك اليومية</div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <div class="feature-text">
+                    <div class="feature-title">الحفظ التلقائي</div>
+                    <div class="feature-desc">حفظ جميع بيانات محلياً بأمان</div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔔</div>
+                <div class="feature-text">
+                    <div class="feature-title">التنبيهات</div>
+                    <div class="feature-desc">إشعارات عند إنهاء كل جلسة</div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <div class="feature-text">
+                    <div class="feature-title">متجاوب</div>
+                    <div class="feature-desc">يعمل على جميع الأجهزة والأحجام</div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-text">
+                    <div class="feature-title">تصميم جميل</div>
+                    <div class="feature-desc">واجهة عصرية وممتعة للاستخدام</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- الإحصائيات -->
+        <div class="section">
+            <h2>📊 تتبع الإنجازات</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="sessions">0</div>
+                    <div class="stat-label">جلسات مكتملة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="tasks">0</div>
+                    <div class="stat-label">مهام منجزة</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- النصائح -->
+        <div class="tips">
+            <div class="tips-title">💡 نصائح لأفضل إنتاجية</div>
+            <ul class="tips-list">
+                <li>غيّر هاتفك أثناء جلسة الدراسة</li>
+                <li>اختر مكان هادئ للتركيز</li>
+                <li>لا تتحقق من وسائل التواصل</li>
+                <li>اشرب الماء خلال فترات الراحة</li>
+                <li>حدد أهدافك قبل بدء الجلسة</li>
+                <li>استخدم المهام لتتبع تقدمك</li>
+            </ul>
+        </div>
+        
+        <!-- الأزرار -->
+        <div class="button-group">
+            <a href="index.html" class="button button-primary">بدء التطبيق 🚀</a>
+            <a href="README.md" class="button button-secondary">قراءة المزيد 📖</a>
+        </div>
+        
+        <!-- الفوتر -->
+        <footer>
+            <p>صُنع بـ ❤️ من أجل الطلاب المجدين</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">تطبيق مفتوح المصدر - رخصة MIT</p>
+        </footer>
+    </div>
+    
+    <script>
+        // تحميل الإحصائيات
+        function loadStats() {
+            const data = localStorage.getItem('timerAppData');
+            if (data) {
+                const parsed = JSON.parse(data);
+                document.getElementById('sessions').textContent = parsed.sessionsCompleted || 0;
+                document.getElementById('tasks').textContent = parsed.tasksCompleted || 0;
+            }
+        }
+        
+        // تحديث الإحصائيات كل 5 ثوان
+        loadStats();
+        setInterval(loadStats, 5000);
+    </script>
+</body>
+</html>

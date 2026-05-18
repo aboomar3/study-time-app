@@ -1,0 +1,33 @@
+{
+  "name": "study-timer-and-tasks",
+  "version": "1.0.0",
+  "description": "تطبيق عصري وجميل لمؤقت الدراسة والمهام - Modern and beautiful study timer and tasks application",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html",
+    "server": "python -m http.server 8000",
+    "build": "echo 'No build required for this project'",
+    "test": "echo 'No tests configured yet'"
+  },
+  "keywords": [
+    "pomodoro",
+    "timer",
+    "study",
+    "tasks",
+    "productivity",
+    "دراسة",
+    "مهام",
+    "إنتاجية"
+  ],
+  "author": "Study Timer App Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/study-timer-app"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/study-timer-app/issues"
+  },
+  "homepage": "https://github.com/yourusername/study-timer-app#readme",
+  "devDependencies": {}
+}

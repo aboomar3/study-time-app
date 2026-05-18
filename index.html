@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مؤقت الدراسة والمهام</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- رأس التطبيق -->
+        <header class="header">
+            <h1>📚 مؤقت الدراسة والمهام</h1>
+            <p class="subtitle">ركز على دراستك وأنجز مهامك</p>
+        </header>
+
+        <main class="main-content">
+            <!-- قسم المؤقت -->
+            <section class="timer-section">
+                <div class="timer-card">
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    
+                    <div class="timer-modes">
+                        <button class="mode-btn active" data-mode="study">دراسة 25 دقيقة</button>
+                        <button class="mode-btn" data-mode="break-short">راحة 5 دقائق</button>
+                        <button class="mode-btn" data-mode="break-long">راحة 15 دقيقة</button>
+                    </div>
+
+                    <div class="timer-controls">
+                        <button class="btn btn-primary" id="startBtn">▶ ابدأ</button>
+                        <button class="btn btn-secondary" id="pauseBtn">⏸ إيقاف مؤقت</button>
+                        <button class="btn btn-warning" id="resetBtn">↻ إعادة تعيين</button>
+                    </div>
+
+                    <div class="timer-stats">
+                        <div class="stat">
+                            <span class="stat-label">الجلسات المكتملة</span>
+                            <span class="stat-value" id="sessionsCompleted">0</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">المهام المكتملة</span>
+                            <span class="stat-value" id="tasksCompleted">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم المهام -->
+            <section class="tasks-section">
+                <div class="tasks-card">
+                    <h2>📋 قائمة المهام</h2>
+                    
+                    <div class="add-task">
+                        <input 
+                            type="text" 
+                            id="taskInput" 
+                            placeholder="أضف مهمة جديدة..."
+                            class="task-input"
+                        >
+                        <button class="btn btn-add" id="addTaskBtn">➕ أضف</button>
+                    </div>
+
+                    <ul class="tasks-list" id="tasksList">
+                        <!-- المهام سيتم إضافتها هنا -->
+                    </ul>
+
+                    <div class="tasks-empty" id="emptyState">
+                        <p>✨ لا توجد مهام حالياً</p>
+                        <p>ابدأ بإضافة مهمة جديدة</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- تذكير التركيز -->
+        <div class="focus-reminder" id="focusReminder">
+            <span>💡 تذكر: غير هاتفك أو ركن جهازك الثاني</span>
+        </div>
+    </div>
+
+    <!-- إشعارات صوتية -->
+    <audio id="completeSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
