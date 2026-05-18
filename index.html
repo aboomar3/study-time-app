@@ -10,8 +10,11 @@
     <div class="container">
         <!-- رأس التطبيق -->
         <header class="header">
-            <h1>📚 مؤقت الدراسة والمهام</h1>
-            <p class="subtitle">ركز على دراستك وأنجز مهامك</p>
+            <div class="header-top">
+                <h1>📚 <span data-en="Study Timer">مؤقت الدراسة والمهام</span></h1>
+                <button class="language-toggle" id="languageToggle">English</button>
+            </div>
+            <p class="subtitle" data-en="Focus on your studies and complete your tasks"><span data-ar="ركز على دراستك وأنجز مهامك"></span></p>
         </header>
 
         <main class="main-content">
@@ -21,24 +24,24 @@
                     <div class="timer-display" id="timerDisplay">25:00</div>
                     
                     <div class="timer-modes">
-                        <button class="mode-btn active" data-mode="study">دراسة 25 دقيقة</button>
-                        <button class="mode-btn" data-mode="break-short">راحة 5 دقائق</button>
-                        <button class="mode-btn" data-mode="break-long">راحة 15 دقيقة</button>
+                        <button class="mode-btn active" data-mode="study" data-en="Study 25 min">دراسة 25 دقيقة</button>
+                        <button class="mode-btn" data-mode="break-short" data-en="Break 5 min">راحة 5 دقائق</button>
+                        <button class="mode-btn" data-mode="break-long" data-en="Break 15 min">راحة 15 دقيقة</button>
                     </div>
 
                     <div class="timer-controls">
-                        <button class="btn btn-primary" id="startBtn">▶ ابدأ</button>
-                        <button class="btn btn-secondary" id="pauseBtn">⏸ إيقاف مؤقت</button>
-                        <button class="btn btn-warning" id="resetBtn">↻ إعادة تعيين</button>
+                        <button class="btn btn-primary" id="startBtn" data-en="▶ Start">▶ ابدأ</button>
+                        <button class="btn btn-secondary" id="pauseBtn" data-en="⏸ Pause">⏸ إيقاف مؤقت</button>
+                        <button class="btn btn-warning" id="resetBtn" data-en="↻ Reset">↻ إعادة تعيين</button>
                     </div>
 
                     <div class="timer-stats">
                         <div class="stat">
-                            <span class="stat-label">الجلسات المكتملة</span>
+                            <span class="stat-label" data-en="Sessions Completed">الجلسات المكتملة</span>
                             <span class="stat-value" id="sessionsCompleted">0</span>
                         </div>
                         <div class="stat">
-                            <span class="stat-label">المهام المكتملة</span>
+                            <span class="stat-label" data-en="Tasks Completed">المهام المكتملة</span>
                             <span class="stat-value" id="tasksCompleted">0</span>
                         </div>
                     </div>
@@ -48,16 +51,17 @@
             <!-- قسم المهام -->
             <section class="tasks-section">
                 <div class="tasks-card">
-                    <h2>📋 قائمة المهام</h2>
+                    <h2 data-en="Task List">📋 قائمة المهام</h2>
                     
                     <div class="add-task">
                         <input 
                             type="text" 
                             id="taskInput" 
                             placeholder="أضف مهمة جديدة..."
+                            data-en-placeholder="Add a new task..."
                             class="task-input"
                         >
-                        <button class="btn btn-add" id="addTaskBtn">➕ أضف</button>
+                        <button class="btn btn-add" id="addTaskBtn" data-en="➕ Add">➕ أضف</button>
                     </div>
 
                     <ul class="tasks-list" id="tasksList">
@@ -65,16 +69,45 @@
                     </ul>
 
                     <div class="tasks-empty" id="emptyState">
-                        <p>✨ لا توجد مهام حالياً</p>
-                        <p>ابدأ بإضافة مهمة جديدة</p>
+                        <p data-en="✨ No tasks yet">✨ لا توجد مهام حالياً</p>
+                        <p data-en="Start by adding a new task">ابدأ بإضافة مهمة جديدة</p>
                     </div>
                 </div>
             </section>
         </main>
 
+        <!-- قسم مؤقت الامتحان -->
+        <section class="exam-section">
+            <div class="exam-card">
+                <h2 data-en="Exam Timer">⏰ مؤقت امتحان البكلوريا</h2>
+                <p class="exam-date" data-en="Exam Date: June 6, 2026">تاريخ الامتحان: 6 يونيو 2026</p>
+                
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="examDays">0</div>
+                        <div class="countdown-label" data-en="Days">أيام</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="examHours">0</div>
+                        <div class="countdown-label" data-en="Hours">ساعات</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="examMinutes">0</div>
+                        <div class="countdown-label" data-en="Minutes">دقائق</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value" id="examSeconds">0</div>
+                        <div class="countdown-label" data-en="Seconds">ثواني</div>
+                    </div>
+                </div>
+
+                <div class="exam-message" id="examMessage"></div>
+            </div>
+        </section>
+
         <!-- تذكير التركيز -->
         <div class="focus-reminder" id="focusReminder">
-            <span>💡 تذكر: غير هاتفك أو ركن جهازك الثاني</span>
+            <span data-en="💡 Remember: Turn off your phone or put away your second device">💡 تذكر: غير هاتفك أو ركن جهازك الثاني</span>
         </div>
     </div>
 
