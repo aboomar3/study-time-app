@@ -1,8 +1,8 @@
 // ========== متغيرات عامة ==========
 const TIMER_MODES = {
-    study: { name: 'دراسة', minutes: 25 },
-    'break-short': { name: 'راحة قصيرة', minutes: 5 },
-    'break-long': { name: 'راحة طويلة', minutes: 15 }
+    study: { name: 'دراسة', nameEn: 'Study', minutes: 25 },
+    'break-short': { name: 'راحة قصيرة', nameEn: 'Short Break', minutes: 5 },
+    'break-long': { name: 'راحة طويلة', nameEn: 'Long Break', minutes: 15 }
 };
 
 let timerState = {
@@ -11,11 +11,62 @@ let timerState = {
     isPaused: false,
     timeLeft: TIMER_MODES.study.minutes * 60,
     sessionsCompleted: 0,
-    tasksCompleted: 0
+    tasksCompleted: 0,
+    language: 'ar'
 };
 
 let timerInterval = null;
+let examCountdownInterval = null;
 const tasksList = [];
+
+const translations = {
+    ar: {
+        startBtn: '▶ ابدأ',
+        continueBtn: '▶ متابعة',
+        pauseBtn: '⏸ إيقاف مؤقت',
+        resetBtn: '↻ إعادة تعيين',
+        addTaskBtn: '➕ أضف',
+        sessionsLabel: 'الجلسات المكتملة',
+        tasksLabel: 'المهام المكتملة',
+        taskPlaceholder: 'أضف مهمة جديدة...',
+        emptyTask: '⚠️ أدخل نص ا��مهمة أولاً',
+        taskAdded: '✅ تمت إضافة المهمة',
+        taskDeleted: '🗑️ تم حذف المهمة',
+        taskCompleted: '🎯 تم إكمال المهمة!',
+        sessionComplete: '🎉 تم إكمال جلسة دراسة! خذ راحة قصيرة.',
+        breakComplete: '✨ انتهت فترة الراحة! استعد للدراسة مجدداً.',
+        focusReminder: '💡 تذكر: غير هاتفك أو ركن جهازك الثاني',
+        examDate: 'تاريخ الامتحان: 6 يونيو 2026',
+        daysLabel: 'أيام',
+        hoursLabel: 'ساعات',
+        minutesLabel: 'دقائق',
+        secondsLabel: 'ثواني',
+        examMessage: '🎓 يا فريت يا بنت! حان وقت الامتحان! 🎓'
+    },
+    en: {
+        startBtn: '▶ Start',
+        continueBtn: '▶ Continue',
+        pauseBtn: '⏸ Pause',
+        resetBtn: '↻ Reset',
+        addTaskBtn: '➕ Add',
+        sessionsLabel: 'Sessions Completed',
+        tasksLabel: 'Tasks Completed',
+        taskPlaceholder: 'Add a new task...',
+        emptyTask: '⚠️ Please enter a task first',
+        taskAdded: '✅ Task added',
+        taskDeleted: '🗑️ Task deleted',
+        taskCompleted: '🎯 Task completed!',
+        sessionComplete: '🎉 Study session completed! Take a short break.',
+        breakComplete: '✨ Break time over! Ready to study again.',
+        focusReminder: '💡 Remember: Turn off your phone or put away your second device',
+        examDate: 'Exam Date: June 6, 2026',
+        daysLabel: 'Days',
+        hoursLabel: 'Hours',
+        minutesLabel: 'Minutes',
+        secondsLabel: 'Seconds',
+        examMessage: '🎓 Good luck! It\'s exam time! 🎓'
+    }
+};
 
 // ========== عناصر DOM ==========
 const timerDisplay = document.getElementById('timerDisplay');
@@ -31,6 +82,7 @@ const tasksCompletedEl = document.getElementById('tasksCompleted');
 const modeBtns = document.querySelectorAll('.mode-btn');
 const focusReminder = document.getElementById('focusReminder');
 const completeSound = document.getElementById('completeSound');
+const languageToggle = document.getElementById('languageToggle');
 
 // ========== تحميل البيانات ==========
 function loadData() {
@@ -39,9 +91,18 @@ function loadData() {
         const data = JSON.parse(savedData);
         timerState.sessionsCompleted = data.sessionsCompleted || 0;
         timerState.tasksCompleted = data.tasksCompleted || 0;
+        timerState.language = data.language || 'ar';
         tasksList.length = 0;
         tasksList.push(...(data.tasks || []));
     }
+    
+    // تطبيق اللغة المحفوظة
+    if (timerState.language === 'en') {
+        switchToEnglish();
+    } else {
+        switchToArabic();
+    }
+    
     updateDisplay();
 }
 
@@ -50,9 +111,120 @@ function saveData() {
     const data = {
         sessionsCompleted: timerState.sessionsCompleted,
         tasksCompleted: timerState.tasksCompleted,
-        tasks: tasksList
+        tasks: tasksList,
+        language: timerState.language
     };
     localStorage.setItem('timerAppData', JSON.stringify(data));
+}
+
+// ========== تبديل اللغة ==========
+function switchToArabic() {
+    timerState.language = 'ar';
+    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl';
+    updateLanguageContent('ar');
+    languageToggle.textContent = 'English';
+    saveData();
+}
+
+function switchToEnglish() {
+    timerState.language = 'en';
+    document.documentElement.lang = 'en';
+    document.documentElement.dir = 'ltr';
+    updateLanguageContent('en');
+    languageToggle.textContent = 'العربية';
+    saveData();
+}
+
+function updateLanguageContent(lang) {
+    const elements = document.querySelectorAll('[data-en]');
+    elements.forEach(el => {
+        if (lang === 'en') {
+            const enText = el.getAttribute('data-en');
+            if (enText) {
+                el.textContent = enText;
+            }
+        } else {
+            const arSpan = el.querySelector('[data-ar]');
+            if (arSpan) {
+                el.innerHTML = arSpan.getAttribute('data-ar');
+            }
+        }
+    });
+
+    // تحديث labels مع data attributes
+    const labelElements = document.querySelectorAll('[data-en]');
+    labelElements.forEach(el => {
+        if (el.getAttribute('data-en')) {
+            el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.innerHTML;
+        }
+    });
+
+    // تحديث الـ placeholder
+    const input = document.getElementById('taskInput');
+    if (input) {
+        input.placeholder = lang === 'en' ? 'Add a new task...' : 'أضف مهمة جديدة...';
+    }
+
+    // تحديث الأزرار
+    startBtn.textContent = timerState.isPaused ? 
+        (lang === 'en' ? translations.en.continueBtn : translations.ar.continueBtn) :
+        (lang === 'en' ? translations.en.startBtn : translations.ar.startBtn);
+    pauseBtn.textContent = lang === 'en' ? translations.en.pauseBtn : translations.ar.pauseBtn;
+    resetBtn.textContent = lang === 'en' ? translations.en.resetBtn : translations.ar.resetBtn;
+    addTaskBtn.textContent = lang === 'en' ? translations.en.addTaskBtn : translations.ar.addTaskBtn;
+
+    // تحديث الـ labels
+    const statLabels = document.querySelectorAll('.stat-label');
+    statLabels.forEach((label, index) => {
+        if (index === 0) {
+            label.textContent = lang === 'en' ? translations.en.sessionsLabel : translations.ar.sessionsLabel;
+        } else if (index === 1) {
+            label.textContent = lang === 'en' ? translations.en.tasksLabel : translations.ar.tasksLabel;
+        }
+    });
+
+    // تحديث الرسائل الفارغة
+    const emptyMessages = document.querySelectorAll('#emptyState p');
+    if (emptyMessages.length >= 2) {
+        emptyMessages[0].textContent = lang === 'en' ? '✨ No tasks yet' : '✨ لا توجد مهام حالياً';
+        emptyMessages[1].textContent = lang === 'en' ? 'Start by adding a new task' : 'ابدأ بإضافة مهمة جديدة';
+    }
+
+    // تحديث تذكير التركيز
+    focusReminder.textContent = lang === 'en' ? translations.en.focusReminder : translations.ar.focusReminder;
+
+    // تحديث تاريخ الامتحان
+    const examDate = document.querySelector('.exam-date');
+    if (examDate) {
+        examDate.textContent = lang === 'en' ? translations.en.examDate : translations.ar.examDate;
+    }
+
+    // تحديث تسميات العد التنازلي
+    const countdownLabels = document.querySelectorAll('.countdown-label');
+    const labelTexts = lang === 'en' 
+        ? [translations.en.daysLabel, translations.en.hoursLabel, translations.en.minutesLabel, translations.en.secondsLabel]
+        : [translations.ar.daysLabel, translations.ar.hoursLabel, translations.ar.minutesLabel, translations.ar.secondsLabel];
+    
+    countdownLabels.forEach((label, index) => {
+        if (index < labelTexts.length) {
+            label.textContent = labelTexts[index];
+        }
+    });
+
+    // تحديث أزرار الأنماط
+    const modeBtns = document.querySelectorAll('.mode-btn');
+    modeBtns.forEach(btn => {
+        const mode = btn.getAttribute('data-mode');
+        const enText = btn.getAttribute('data-en');
+        if (mode === 'study') {
+            btn.textContent = lang === 'en' ? enText : 'دراسة 25 دقيقة';
+        } else if (mode === 'break-short') {
+            btn.textContent = lang === 'en' ? enText : 'راحة 5 دقائق';
+        } else if (mode === 'break-long') {
+            btn.textContent = lang === 'en' ? enText : 'راحة 15 دقيقة';
+        }
+    });
 }
 
 // ========== تحديث العرض ==========
@@ -70,7 +242,10 @@ function updateTimerDisplay() {
         `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     
     // تحديث عنوان الصفحة
-    document.title = `${timerDisplay.textContent} - مؤقت الدراسة`;
+    const pageTitle = timerState.language === 'en' 
+        ? `${timerDisplay.textContent} - Study Timer`
+        : `${timerDisplay.textContent} - مؤقت الدراسة`;
+    document.title = pageTitle;
 }
 
 // ========== وظائف المؤقت ==========
@@ -99,7 +274,10 @@ function pauseTimer() {
     timerState.isRunning = false;
     timerState.isPaused = true;
     clearInterval(timerInterval);
-    startBtn.textContent = '▶ متابعة';
+    const btnText = timerState.language === 'en' 
+        ? translations.en.continueBtn 
+        : translations.ar.continueBtn;
+    startBtn.textContent = btnText;
     startBtn.style.display = 'block';
     pauseBtn.style.display = 'none';
     document.querySelector('.timer-card').classList.remove('active');
@@ -110,7 +288,10 @@ function resetTimer() {
     timerState.isRunning = false;
     timerState.isPaused = false;
     timerState.timeLeft = TIMER_MODES[timerState.mode].minutes * 60;
-    startBtn.textContent = '▶ ابدأ';
+    const btnText = timerState.language === 'en' 
+        ? translations.en.startBtn 
+        : translations.ar.startBtn;
+    startBtn.textContent = btnText;
     startBtn.style.display = 'block';
     pauseBtn.style.display = 'none';
     focusReminder.style.display = 'none';
@@ -125,10 +306,16 @@ function completeTimer() {
     
     if (timerState.mode === 'study') {
         timerState.sessionsCompleted++;
-        showNotification('🎉 تم إكمال جلسة دراسة! خذ راحة قصيرة.');
+        const message = timerState.language === 'en' 
+            ? translations.en.sessionComplete 
+            : translations.ar.sessionComplete;
+        showNotification(message);
         changeMode('break-short');
     } else {
-        showNotification('✨ انتهت فترة الراحة! استعد للدراسة مجدداً.');
+        const message = timerState.language === 'en' 
+            ? translations.en.breakComplete 
+            : translations.ar.breakComplete;
+        showNotification(message);
         changeMode('study');
     }
     
@@ -156,10 +343,11 @@ function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.textContent = message;
+    const position = timerState.language === 'en' ? 'left' : 'right';
     notification.style.cssText = `
         position: fixed;
         top: 20px;
-        right: 20px;
+        ${position}: 20px;
         background: rgba(0, 0, 0, 0.8);
         color: white;
         padding: 16px 24px;
@@ -179,29 +367,35 @@ function showNotification(message) {
 
 // ========== تشغيل صوت ==========
 function playSound() {
-    // محاولة تشغيل صوت نبضة
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
-    
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-    
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (e) {
+        console.log('Audio context not available');
+    }
 }
 
 // ========== وظائف المهام ==========
 function addTask() {
     const taskText = taskInput.value.trim();
     if (!taskText) {
-        showNotification('⚠️ أدخل نص المهمة أولاً');
+        const message = timerState.language === 'en' 
+            ? translations.en.emptyTask 
+            : translations.ar.emptyTask;
+        showNotification(message);
         return;
     }
 
@@ -209,14 +403,17 @@ function addTask() {
         id: Date.now(),
         text: taskText,
         completed: false,
-        createdAt: new Date().toLocaleDateString('ar-SA')
+        createdAt: new Date().toLocaleDateString(timerState.language === 'en' ? 'en-US' : 'ar-SA')
     };
 
     tasksList.push(task);
     taskInput.value = '';
     saveData();
     renderTasks();
-    showNotification('✅ تمت إضافة المهمة');
+    const message = timerState.language === 'en' 
+        ? translations.en.taskAdded 
+        : translations.ar.taskAdded;
+    showNotification(message);
 }
 
 function deleteTask(id) {
@@ -225,7 +422,10 @@ function deleteTask(id) {
         tasksList.splice(index, 1);
         saveData();
         renderTasks();
-        showNotification('🗑️ تم حذف المهمة');
+        const message = timerState.language === 'en' 
+            ? translations.en.taskDeleted 
+            : translations.ar.taskDeleted;
+        showNotification(message);
     }
 }
 
@@ -235,7 +435,10 @@ function toggleTask(id) {
         task.completed = !task.completed;
         if (task.completed) {
             timerState.tasksCompleted++;
-            showNotification('🎯 تم إكمال المهمة!');
+            const message = timerState.language === 'en' 
+                ? translations.en.taskCompleted 
+                : translations.ar.taskCompleted;
+            showNotification(message);
         } else {
             timerState.tasksCompleted--;
         }
@@ -281,11 +484,54 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// ========== مؤقت الامتحان ==========
+function updateExamCountdown() {
+    const examDate = new Date('2026-06-06T00:00:00').getTime();
+    const now = new Date().getTime();
+    const difference = examDate - now;
+
+    if (difference <= 0) {
+        // الامتحان قد بدأ
+        document.getElementById('examDays').textContent = '0';
+        document.getElementById('examHours').textContent = '0';
+        document.getElementById('examMinutes').textContent = '0';
+        document.getElementById('examSeconds').textContent = '0';
+        
+        const message = timerState.language === 'en' 
+            ? translations.en.examMessage 
+            : translations.ar.examMessage;
+        const examMessage = document.getElementById('examMessage');
+        examMessage.textContent = message;
+        examMessage.classList.add('show');
+        
+        clearInterval(examCountdownInterval);
+        return;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    document.getElementById('examDays').textContent = days;
+    document.getElementById('examHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('examMinutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('examSeconds').textContent = String(seconds).padStart(2, '0');
+}
+
 // ========== معالجات الأحداث ==========
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
 resetBtn.addEventListener('click', resetTimer);
 addTaskBtn.addEventListener('click', addTask);
+
+languageToggle.addEventListener('click', () => {
+    if (timerState.language === 'ar') {
+        switchToEnglish();
+    } else {
+        switchToArabic();
+    }
+});
 
 taskInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
@@ -306,6 +552,10 @@ pauseBtn.style.display = 'none';
 
 // ========== تحميل البيانات عند بدء التطبيق ==========
 loadData();
+
+// ========== بدء مؤقت الامتحان ==========
+updateExamCountdown();
+examCountdownInterval = setInterval(updateExamCountdown, 1000);
 
 // ========== حفظ البيانات قبل الإغلاق ==========
 window.addEventListener('beforeunload', saveData);
