@@ -7,6 +7,7 @@
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
+    --exam-color: #f97316;
     --light-bg: #f8fafc;
     --dark-text: #1e293b;
     --light-text: #64748b;
@@ -61,11 +62,38 @@ body {
     animation: fadeIn 0.6s ease-out;
 }
 
+.header-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
 .header h1 {
     font-size: 2.5rem;
-    margin-bottom: 10px;
+    margin: 0;
     text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     font-weight: 700;
+}
+
+.language-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.language-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
 .header .subtitle {
@@ -88,6 +116,7 @@ body {
     display: grid;
     gap: 25px;
     grid-template-columns: 1fr 1fr;
+    margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {
@@ -98,7 +127,8 @@ body {
 
 /* ========== بطاقات عامة ========== */
 .timer-card,
-.tasks-card {
+.tasks-card,
+.exam-card {
     background: white;
     border-radius: 20px;
     padding: 30px;
@@ -107,7 +137,8 @@ body {
 }
 
 .timer-card:hover,
-.tasks-card:hover {
+.tasks-card:hover,
+.exam-card:hover {
     box-shadow: var(--hover-shadow);
     transform: translateY(-5px);
 }
@@ -423,6 +454,96 @@ body {
     font-size: 2rem;
 }
 
+/* ========== قسم مؤقت الامتحان ========== */
+.exam-section {
+    animation: slideUp 0.6s ease-out 0.2s backwards;
+}
+
+.exam-card {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(249, 115, 22, 0.02) 100%);
+    border: 2px solid rgba(249, 115, 22, 0.2);
+}
+
+.exam-card h2 {
+    color: var(--exam-color);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.exam-date {
+    color: var(--light-text);
+    font-size: 1rem;
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.countdown {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.countdown-item {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.countdown-item:hover {
+    border-color: var(--exam-color);
+    transform: translateY(-3px);
+}
+
+.countdown-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--exam-color);
+    font-family: 'Courier New', monospace;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.countdown-label {
+    color: var(--light-text);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.exam-message {
+    text-align: center;
+    padding: 16px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 12px;
+    color: var(--success-color);
+    font-weight: 600;
+    display: none;
+}
+
+.exam-message.show {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .countdown {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .countdown-value {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .countdown {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ========== تذكير التركيز ========== */
 .focus-reminder {
     background: rgba(255, 255, 255, 0.95);
@@ -443,13 +564,23 @@ body {
         font-size: 1.8rem;
     }
 
+    .header-top {
+        gap: 15px;
+    }
+
+    .language-toggle {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
     .timer-display {
         font-size: 3rem;
         letter-spacing: 3px;
     }
 
     .timer-card,
-    .tasks-card {
+    .tasks-card,
+    .exam-card {
         padding: 20px;
     }
 
