@@ -12,7 +12,9 @@ let timerState = {
     timeLeft: TIMER_MODES.study.minutes * 60,
     sessionsCompleted: 0,
     tasksCompleted: 0,
-    language: 'ar'
+    language: 'ar',
+    isCustomMode: false,
+    customTimes: []
 };
 
 let timerInterval = null;
@@ -29,7 +31,7 @@ const translations = {
         sessionsLabel: 'الجلسات المكتملة',
         tasksLabel: 'المهام المكتملة',
         taskPlaceholder: 'أضف مهمة جديدة...',
-        emptyTask: '⚠️ أدخل نص ا��مهمة أولاً',
+        emptyTask: '⚠️ أدخل نص المهمة أولاً',
         taskAdded: '✅ تمت إضافة المهمة',
         taskDeleted: '🗑️ تم حذف المهمة',
         taskCompleted: '🎯 تم إكمال المهمة!',
@@ -41,7 +43,9 @@ const translations = {
         hoursLabel: 'ساعات',
         minutesLabel: 'دقائق',
         secondsLabel: 'ثواني',
-        examMessage: '🎓 يا فريت يا بنت! حان وقت الامتحان! 🎓'
+        examMessage: '🎓 يا فريت يا بنت! حان وقت الامتحان! 🎓',
+        customTimeAdded: '⏱️ تم إضافة الوقت المخصص',
+        emptyCustomTime: '⚠️ الرجاء إدخال وقت صحيح'
     },
     en: {
         startBtn: '▶ Start',
@@ -64,7 +68,9 @@ const translations = {
         hoursLabel: 'Hours',
         minutesLabel: 'Minutes',
         secondsLabel: 'Seconds',
-        examMessage: '🎓 Good luck! It\'s exam time! 🎓'
+        examMessage: '🎓 Good luck! It\'s exam time! 🎓',
+        customTimeAdded: '⏱️ Custom time added',
+        emptyCustomTime: '⚠️ Please enter a valid time'
     }
 };
 
@@ -84,6 +90,18 @@ const focusReminder = document.getElementById('focusReminder');
 const completeSound = document.getElementById('completeSound');
 const languageToggle = document.getElementById('languageToggle');
 
+// عناصر الوقت المخصص
+const customMinutesInput = document.getElementById('customMinutes');
+const customSecondsInput = document.getElementById('customSeconds');
+const customPreview = document.getElementById('customPreview');
+const setCustomBtn = document.getElementById('setCustomBtn');
+const startCustomBtn = document.getElementById('startCustomBtn');
+const savedTimesList = document.getElementById('savedTimesList');
+
+// عناصر التنقل
+const navBtns = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section-content');
+
 // ========== تحميل البيانات ==========
 function loadData() {
     const savedData = localStorage.getItem('timerAppData');
@@ -92,6 +110,7 @@ function loadData() {
         timerState.sessionsCompleted = data.sessionsCompleted || 0;
         timerState.tasksCompleted = data.tasksCompleted || 0;
         timerState.language = data.language || 'ar';
+        timerState.customTimes = data.customTimes || [];
         tasksList.length = 0;
         tasksList.push(...(data.tasks || []));
     }
@@ -104,6 +123,7 @@ function loadData() {
     }
     
     updateDisplay();
+    renderSavedTimes();
 }
 
 // ========== حفظ البيانات ==========
@@ -112,7 +132,8 @@ function saveData() {
         sessionsCompleted: timerState.sessionsCompleted,
         tasksCompleted: timerState.tasksCompleted,
         tasks: tasksList,
-        language: timerState.language
+        language: timerState.language,
+        customTimes: timerState.customTimes
     };
     localStorage.setItem('timerAppData', JSON.stringify(data));
 }
@@ -225,6 +246,16 @@ function updateLanguageContent(lang) {
             btn.textContent = lang === 'en' ? enText : 'راحة 15 دقيقة';
         }
     });
+
+    // تحديث تسميات الإدخال المخصص
+    const inputLabels = document.querySelectorAll('.input-field label');
+    inputLabels.forEach(label => {
+        if (label.textContent.includes('الدقائق') || label.getAttribute('data-en') === 'Minutes') {
+            label.textContent = lang === 'en' ? 'Minutes' : 'الدقائق';
+        } else if (label.textContent.includes('الثواني') || label.getAttribute('data-en') === 'Seconds') {
+            label.textContent = lang === 'en' ? 'Seconds' : 'الثواني';
+        }
+    });
 }
 
 // ========== تحديث العرض ==========
@@ -326,6 +357,7 @@ function completeTimer() {
 // ========== تغيير النمط ==========
 function changeMode(mode) {
     timerState.mode = mode;
+    timerState.isCustomMode = false;
     timerState.timeLeft = TIMER_MODES[mode].minutes * 60;
     
     modeBtns.forEach(btn => {
@@ -519,6 +551,107 @@ function updateExamCountdown() {
     document.getElementById('examSeconds').textContent = String(seconds).padStart(2, '0');
 }
 
+// ========== وظائف الوقت المخصص ==========
+function updateCustomPreview() {
+    const minutes = parseInt(customMinutesInput.value) || 0;
+    const seconds = parseInt(customSecondsInput.value) || 0;
+    
+    customPreview.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function setCustomTime() {
+    const minutes = parseInt(customMinutesInput.value) || 0;
+    const seconds = parseInt(customSecondsInput.value) || 0;
+    
+    if (minutes === 0 && seconds === 0) {
+        const message = timerState.language === 'en' 
+            ? translations.en.emptyCustomTime 
+            : translations.ar.emptyCustomTime;
+        showNotification(message);
+        return;
+    }
+
+    timerState.mode = 'custom';
+    timerState.isCustomMode = true;
+    timerState.timeLeft = minutes * 60 + seconds;
+    
+    // إزالة الحالة النشطة من جميع الأزرار
+    modeBtns.forEach(btn => btn.classList.remove('active'));
+    
+    updateTimerDisplay();
+    resetTimer();
+    
+    // حفظ الوقت المخصص إذا لم يكن موجوداً
+    const timeKey = `${minutes}:${seconds}`;
+    if (!timerState.customTimes.some(t => t.key === timeKey)) {
+        timerState.customTimes.push({
+            key: timeKey,
+            minutes,
+            seconds,
+            display: `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        });
+        saveData();
+        renderSavedTimes();
+    }
+    
+    const message = timerState.language === 'en' 
+        ? translations.en.customTimeAdded 
+        : translations.ar.customTimeAdded;
+    showNotification(message);
+}
+
+function startCustomTimer() {
+    setCustomTime();
+    startTimer();
+}
+
+function loadSavedTime(minutes, seconds) {
+    customMinutesInput.value = minutes;
+    customSecondsInput.value = seconds;
+    updateCustomPreview();
+    setCustomTime();
+}
+
+function renderSavedTimes() {
+    savedTimesList.innerHTML = '';
+    
+    if (timerState.customTimes.length === 0) {
+        savedTimesList.innerHTML = '<div class="saved-times-empty">' + 
+            (timerState.language === 'en' ? 'No saved times yet' : 'لا توجد أوقات محفوظة') + 
+            '</div>';
+        return;
+    }
+
+    timerState.customTimes.forEach(time => {
+        const div = document.createElement('div');
+        div.className = 'saved-time-item';
+        div.innerHTML = `
+            <span class="saved-time-value">${time.display}</span>
+            <button class="saved-time-btn" onclick="loadSavedTime(${time.minutes}, ${time.seconds})">▶</button>
+        `;
+        savedTimesList.appendChild(div);
+    });
+}
+
+// ========== وظائف التنقل ==========
+function switchSection(sectionName) {
+    sections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    const targetSection = document.getElementById(`${sectionName}-section`);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+    
+    navBtns.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionName) {
+            btn.classList.add('active');
+        }
+    });
+}
+
 // ========== معالجات الأحداث ==========
 startBtn.addEventListener('click', startTimer);
 pauseBtn.addEventListener('click', pauseTimer);
@@ -547,6 +680,23 @@ modeBtns.forEach(btn => {
     });
 });
 
+// معالجات الوقت المخصص
+customMinutesInput.addEventListener('change', updateCustomPreview);
+customSecondsInput.addEventListener('change', updateCustomPreview);
+customMinutesInput.addEventListener('input', updateCustomPreview);
+customSecondsInput.addEventListener('input', updateCustomPreview);
+
+setCustomBtn.addEventListener('click', setCustomTime);
+startCustomBtn.addEventListener('click', startCustomTimer);
+
+// معالجات التنقل
+navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const section = btn.dataset.section;
+        switchSection(section);
+    });
+});
+
 // ========== إخفاء زر الإيقاف المؤقت في البداية ==========
 pauseBtn.style.display = 'none';
 
@@ -566,3 +716,6 @@ setInterval(() => {
         updateTimerDisplay();
     }
 }, 1000);
+
+// ========== تهيئة المعاينة المخصصة ==========
+updateCustomPreview();
