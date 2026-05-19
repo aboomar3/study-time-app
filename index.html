@@ -17,93 +17,184 @@
             <p class="subtitle" data-en="Focus on your studies and complete your tasks"><span data-ar="ركز على دراستك وأنجز مهامك"></span></p>
         </header>
 
-        <main class="main-content">
-            <!-- قسم المؤقت -->
-            <section class="timer-section">
-                <div class="timer-card">
-                    <div class="timer-display" id="timerDisplay">25:00</div>
-                    
-                    <div class="timer-modes">
-                        <button class="mode-btn active" data-mode="study" data-en="Study 25 min">دراسة 25 دقيقة</button>
-                        <button class="mode-btn" data-mode="break-short" data-en="Break 5 min">راحة 5 دقائق</button>
-                        <button class="mode-btn" data-mode="break-long" data-en="Break 15 min">راحة 15 دقيقة</button>
-                    </div>
+        <!-- قائمة التنقل -->
+        <nav class="navigation">
+            <button class="nav-btn active" data-section="timer" data-en="⏱️ Timer">⏱️ المؤقت</button>
+            <button class="nav-btn" data-section="tasks" data-en="📋 Tasks">📋 المهام</button>
+            <button class="nav-btn" data-section="custom" data-en="⚙️ Custom Time">⚙️ وقت مخصص</button>
+            <button class="nav-btn" data-section="exam" data-en="🎓 Exam">🎓 الامتحان</button>
+        </nav>
 
-                    <div class="timer-controls">
-                        <button class="btn btn-primary" id="startBtn" data-en="▶ Start">▶ ابدأ</button>
-                        <button class="btn btn-secondary" id="pauseBtn" data-en="⏸ Pause">⏸ إيقاف مؤقت</button>
-                        <button class="btn btn-warning" id="resetBtn" data-en="↻ Reset">↻ إعادة تعيين</button>
-                    </div>
-
-                    <div class="timer-stats">
-                        <div class="stat">
-                            <span class="stat-label" data-en="Sessions Completed">الجلسات المكتملة</span>
-                            <span class="stat-value" id="sessionsCompleted">0</span>
+        <!-- قسم المؤقت الرئيسي -->
+        <div id="timer-section" class="section-content">
+            <div class="main-content">
+                <!-- قسم المؤقت -->
+                <section class="timer-section">
+                    <div class="timer-card">
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+                        
+                        <div class="timer-modes">
+                            <button class="mode-btn active" data-mode="study" data-en="Study 25 min">دراسة 25 دقيقة</button>
+                            <button class="mode-btn" data-mode="break-short" data-en="Break 5 min">راحة 5 دقائق</button>
+                            <button class="mode-btn" data-mode="break-long" data-en="Break 15 min">راحة 15 دقيقة</button>
                         </div>
-                        <div class="stat">
-                            <span class="stat-label" data-en="Tasks Completed">المهام المكتملة</span>
-                            <span class="stat-value" id="tasksCompleted">0</span>
+
+                        <div class="timer-controls">
+                            <button class="btn btn-primary" id="startBtn" data-en="▶ Start">▶ ابدأ</button>
+                            <button class="btn btn-secondary" id="pauseBtn" data-en="⏸ Pause">⏸ إيقاف مؤقت</button>
+                            <button class="btn btn-warning" id="resetBtn" data-en="↻ Reset">↻ إعادة تعيين</button>
+                        </div>
+
+                        <div class="timer-stats">
+                            <div class="stat">
+                                <span class="stat-label" data-en="Sessions Completed">الجلسات المكتملة</span>
+                                <span class="stat-value" id="sessionsCompleted">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label" data-en="Tasks Completed">المهام المكتملة</span>
+                                <span class="stat-value" id="tasksCompleted">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم المهام -->
+                <section class="tasks-section">
+                    <div class="tasks-card">
+                        <h2 data-en="Task List">📋 قائمة المهام</h2>
+                        
+                        <div class="add-task">
+                            <input 
+                                type="text" 
+                                id="taskInput" 
+                                placeholder="أضف مهمة جديدة..."
+                                data-en-placeholder="Add a new task..."
+                                class="task-input"
+                            >
+                            <button class="btn btn-add" id="addTaskBtn" data-en="➕ Add">➕ أضف</button>
+                        </div>
+
+                        <ul class="tasks-list" id="tasksList">
+                            <!-- المهام سيتم إضافتها هنا -->
+                        </ul>
+
+                        <div class="tasks-empty" id="emptyState">
+                            <p data-en="✨ No tasks yet">✨ لا توجد مهام حالياً</p>
+                            <p data-en="Start by adding a new task">ابدأ بإضافة مهمة جديدة</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- قسم الوقت المخصص -->
+        <div id="custom-section" class="section-content" style="display: none;">
+            <div class="custom-section">
+                <div class="custom-card">
+                    <h2 data-en="⚙️ Custom Timer">⚙️ وقت مخصص</h2>
+                    
+                    <div class="custom-inputs">
+                        <div class="input-field">
+                            <label data-en="Minutes">الدقائق</label>
+                            <input 
+                                type="number" 
+                                id="customMinutes" 
+                                class="time-input"
+                                min="0" 
+                                max="60" 
+                                value="25"
+                            >
+                        </div>
+                        <div class="input-field">
+                            <label data-en="Seconds">الثواني</label>
+                            <input 
+                                type="number" 
+                                id="customSeconds" 
+                                class="time-input"
+                                min="0" 
+                                max="59" 
+                                value="0"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="custom-preview">
+                        <span data-en="Preview">معاينة:</span>
+                        <div class="preview-display" id="customPreview">25:00</div>
+                    </div>
+
+                    <div class="custom-buttons">
+                        <button class="btn btn-primary" id="setCustomBtn" data-en="Set Time">تعيين الوقت</button>
+                        <button class="btn btn-success" id="startCustomBtn" data-en="Set & Start">تعيين وابدأ</button>
+                    </div>
+
+                    <div class="saved-times">
+                        <h3 data-en="Saved Times">⭐ الأوقات المحفوظة</h3>
+                        <div class="saved-times-list" id="savedTimesList">
+                            <div class="saved-times-empty" data-en="No saved times yet">لا توجد أوقات محفوظة</div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- قسم المهام -->
-            <section class="tasks-section">
-                <div class="tasks-card">
-                    <h2 data-en="Task List">📋 قائمة المهام</h2>
-                    
-                    <div class="add-task">
-                        <input 
-                            type="text" 
-                            id="taskInput" 
-                            placeholder="أضف مهمة جديدة..."
-                            data-en-placeholder="Add a new task..."
-                            class="task-input"
-                        >
-                        <button class="btn btn-add" id="addTaskBtn" data-en="➕ Add">➕ أضف</button>
-                    </div>
-
-                    <ul class="tasks-list" id="tasksList">
-                        <!-- المهام سيتم إضافتها هنا -->
-                    </ul>
-
-                    <div class="tasks-empty" id="emptyState">
-                        <p data-en="✨ No tasks yet">✨ لا توجد مهام حالياً</p>
-                        <p data-en="Start by adding a new task">ابدأ بإضافة مهمة جديدة</p>
-                    </div>
+        <!-- قسم المهام المنفصل -->
+        <div id="tasks-section" class="section-content" style="display: none;">
+            <div class="tasks-card">
+                <h2 data-en="Task List">📋 قائمة المهام</h2>
+                
+                <div class="add-task">
+                    <input 
+                        type="text" 
+                        id="taskInput2" 
+                        placeholder="أضف مهمة جديدة..."
+                        data-en-placeholder="Add a new task..."
+                        class="task-input"
+                    >
+                    <button class="btn btn-add" id="addTaskBtn2" data-en="➕ Add">➕ أضف</button>
                 </div>
-            </section>
-        </main>
+
+                <ul class="tasks-list" id="tasksList2">
+                    <!-- المهام سيتم إضافتها هنا -->
+                </ul>
+
+                <div class="tasks-empty" id="emptyState2">
+                    <p data-en="✨ No tasks yet">✨ لا توجد مهام حالياً</p>
+                    <p data-en="Start by adding a new task">ابدأ بإضافة مهمة جديدة</p>
+                </div>
+            </div>
+        </div>
 
         <!-- قسم مؤقت الامتحان -->
-        <section class="exam-section">
-            <div class="exam-card">
-                <h2 data-en="Exam Timer">⏰ مؤقت امتحان البكلوريا</h2>
-                <p class="exam-date" data-en="Exam Date: June 6, 2026">تاريخ الامتحان: 6 يونيو 2026</p>
-                
-                <div class="countdown">
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="examDays">0</div>
-                        <div class="countdown-label" data-en="Days">أيام</div>
+        <div id="exam-section" class="section-content" style="display: none;">
+            <section class="exam-section">
+                <div class="exam-card">
+                    <h2 data-en="Exam Timer">⏰ مؤقت امتحان البكلوريا</h2>
+                    <p class="exam-date" data-en="Exam Date: June 6, 2026">تاريخ الامتحان: 6 يونيو 2026</p>
+                    
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="examDays">0</div>
+                            <div class="countdown-label" data-en="Days">أيام</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="examHours">0</div>
+                            <div class="countdown-label" data-en="Hours">ساعات</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="examMinutes">0</div>
+                            <div class="countdown-label" data-en="Minutes">دقائق</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value" id="examSeconds">0</div>
+                            <div class="countdown-label" data-en="Seconds">ثواني</div>
+                        </div>
                     </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="examHours">0</div>
-                        <div class="countdown-label" data-en="Hours">ساعات</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="examMinutes">0</div>
-                        <div class="countdown-label" data-en="Minutes">دقائق</div>
-                    </div>
-                    <div class="countdown-item">
-                        <div class="countdown-value" id="examSeconds">0</div>
-                        <div class="countdown-label" data-en="Seconds">ثواني</div>
-                    </div>
-                </div>
 
-                <div class="exam-message" id="examMessage"></div>
-            </div>
-        </section>
+                    <div class="exam-message" id="examMessage"></div>
+                </div>
+            </section>
+        </div>
 
         <!-- تذكير التركيز -->
         <div class="focus-reminder" id="focusReminder">
